@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.db import models
+from .models_sequence import Sequence  # noqa: F401
+
 
 
 class TimeStampedModel(models.Model):

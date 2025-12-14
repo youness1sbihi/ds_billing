@@ -55,6 +55,18 @@ class QuoteLine(models.Model):
     line_tax = models.DecimalField(max_digits=14, decimal_places=2, default=Decimal("0.00"))
     line_total = models.DecimalField(max_digits=14, decimal_places=2, default=Decimal("0.00"))
 
+    def save(self, *args, **kwargs):
+    # Auto-fill from selected service (only if missing)
+        if self.service:
+            if not self.description:
+                self.description = self.service.name
+            if not self.unit_price or self.unit_price == Decimal("0.00"):
+                self.unit_price = self.service.unit_price
+            if not self.tax_rate or self.tax_rate == Decimal("0.00"):
+                self.tax_rate = self.service.tax_rate
+
+        super().save(*args, **kwargs)
+
     class Meta:
         ordering = ["id"]
 
